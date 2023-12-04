@@ -1,6 +1,6 @@
 # Compassion Critters
 
-Compassion Critters is a PERN (PostgreSQL, Express.js, React, Node.js) stack-based E-commerce platform dedicated to pet rescue and care. This comprehensive web application enables users to engage in various activities:
+Compassion Critters is a PERN (PostgreSQL, Express.js, React, Node.js) stack-based platform dedicated to pet rescue and care. This comprehensive web application enables users to engage in various activities:
 
 - **Adoption:** Browse and adopt rescued animals, providing them with a loving home.
 
