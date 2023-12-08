@@ -1,11 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 
+
+
 // pages
 import Homepage from "./pages/Homepage";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Policy from "./pages/Policy";
 import Pagenotfound from "./pages/Pagenotfound";
+import Auth from "./pages/auth/Auth";
 
 // Components
 
@@ -18,6 +21,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="*" element={<Pagenotfound />} />
+        <Route path="/login" element={<Auth />} />
       </Routes>
     </>
   );
