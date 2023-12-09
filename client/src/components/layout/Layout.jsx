@@ -2,8 +2,7 @@
 import React from "react";
 import { Box, styled } from "@mui/material";
 import { Helmet } from "react-helmet";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 
 // Components
 import Header from "./Header";
@@ -32,7 +31,7 @@ const Layout = ({ children, title, description, keyword, author }) => {
       </Helmet>
       <Header />
       <Mainbox>
-        <ToastContainer />
+        <Toaster position="top-center" reverseOrder={true} />
         {children}
       </Mainbox>
       <Footer />

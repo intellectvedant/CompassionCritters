@@ -1,9 +1,18 @@
-import React from "react";
-import { AppBar, Box, Toolbar, Typography, styled, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import React, {useState} from "react";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  styled,
+  Button,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
-import toast from "react-toastify";
+import { toast } from "react-hot-toast";
 
 const MainBox = styled(Toolbar)`
   display: flex;
@@ -36,14 +45,27 @@ const RightBox = styled(Box)`
 `;
 
 const Header = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const Navigate = useNavigate();
 
-  const handleLogout=(e)=>{
-    toast.success("Logout Successfull!")
+
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = (e) => {
+    toast.success("Logout Successful!");
     dispatch(logout());
-    localStorage.removeItem('auth')
-  }
+    localStorage.removeItem("auth");
+    Navigate("/login");
+  };
 
   return (
     <AppBar>
@@ -71,9 +93,31 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="/login">
-                <Button onClick={(e)=>handleLogout(e)}>Logout</Button>
-              </Link>
+              <div>
+                <Button
+                  id="basic-button"
+                  aria-controls={open ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleClick}
+                >
+                  {user.user.name}
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuItem onClick={handleClose}><Link to={`/dashboard/${user?.user?.is_admin === false ? "user" : "admin"}`}>Dashboard</Link></MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Button onClick={(e) => handleLogout(e)}>Logout</Button>
+                  </MenuItem>
+                </Menu>
+              </div>
             </>
           )}
         </RightBox>

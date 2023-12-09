@@ -6,6 +6,8 @@ import { tokenVerification } from "../middleware/authMiddleware.js";
 
 dotenv.config();
 
+// Signup/ Register Section
+
 export const userRegister = async (req, res) => {
   try {
     console.log(req.body.signup.name);
@@ -52,6 +54,9 @@ export const userRegister = async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error!" });
   }
 };
+
+
+// Login Section
 
 export const userLogin = async (req, res) => {
   try {
@@ -100,8 +105,10 @@ export const userLogin = async (req, res) => {
     res.status(201).json({
       token,
       user: {
+        id: user.user_id,
         name: user.user_name,
         email: userData.user_email,
+        is_admin: user.is_admin
       },
       msg: "User Logined Succesfully!",
     });

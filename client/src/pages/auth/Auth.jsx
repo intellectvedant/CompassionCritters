@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Box, Typography, TextField, styled, Button } from "@mui/material";
 import Layout from "../../components/layout/Layout";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import dotenv from "dotenv";
 import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {useDispatch} from 'react-redux'
 import {login } from "../../features/auth/authSlice";
 
@@ -42,6 +42,7 @@ const Auth = () => {
   const [loginData, setLoginData] = useState("");
   const [signup, setSignup] = useState("");
   const Naviagte = useNavigate();
+  const location = useLocation();
   
 
   const toggleAccount = () => {
@@ -110,7 +111,7 @@ const Auth = () => {
         setLoginData("");
         dispatch(login({user: response.data.user, token: response.data.token}));
         localStorage.setItem("auth",JSON.stringify(response.data));
-        Naviagte("/");
+        Naviagte(location.state || "/");
       } else {
         toast.error(response.data.msg);
       }
