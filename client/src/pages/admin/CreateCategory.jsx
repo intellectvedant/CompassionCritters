@@ -1,8 +1,7 @@
 import React from "react";
 import Layout from "../../components/layout/Layout";
-import { Box, styled } from "@mui/material";
 import Adminmenu from "../../components/layout/Adminmenu";
-import { useSelector } from "react-redux";
+import { Box, styled } from "@mui/material";
 
 const MainBox = styled(Box)({
   display: "grid",
@@ -14,23 +13,20 @@ const MainBox = styled(Box)({
   },
 });
 
-const Admindashboard = () => {
-  const user = useSelector((state) => state.auth);
-
+const CreateCategory = () => {
   return (
     <Layout>
-      <h1>Admindashboard</h1>
-      <MainBox>
+            <h1>Admindashboard</h1>
+        <MainBox>
         <Box>
           <Adminmenu />
         </Box>
         <Box>
-          <h5>{user?.user?.name}</h5>
-          <h5>{user?.user?.email}</h5>
+        <h1>Category</h1>
         </Box>
       </MainBox>
     </Layout>
   );
 };
 
-export default Admindashboard;
+export default CreateCategory;

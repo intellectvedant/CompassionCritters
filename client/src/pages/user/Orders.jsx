@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from "react-redux";
 import Layout from '../../components/layout/Layout'
 import { Box, styled } from "@mui/material";
 import Usermenu from '../../components/layout/Usermenu';
@@ -14,23 +13,20 @@ const MainBox = styled(Box)({
   },
 });
 
-const Dashboard = () => {
-  const user = useSelector((state)=> state.auth)
-
+const Orders = () => {
   return (
-    <Layout title={"PawBoard"}>
+    <Layout>
         <h1>Dashboard</h1>
         <MainBox>
         <Box>
           <Usermenu />
         </Box>
         <Box>
-          <h5>{user?.user?.name}</h5>
-          <h5>{user?.user?.email}</h5>
+        <h1>Orders</h1>
         </Box>
       </MainBox>
     </Layout>
   )
 }
 
-export default Dashboard
+export default Orders
