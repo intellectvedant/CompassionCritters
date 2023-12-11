@@ -17,7 +17,7 @@ router.get('/user-auth', tokenVerification, (req,res)=>{
 })
 
 // ADMIN SPECIAL protected routes
-router.get('/admin-auth', tokenVerification, (req,res)=>{
+router.get('/admin-auth', tokenVerification,isAdmin,(req,res)=>{
     res.status(200).json({ok: true})
 })
 

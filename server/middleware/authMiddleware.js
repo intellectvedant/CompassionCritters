@@ -42,6 +42,8 @@ export const isAdmin = async (req, res, next) => {
         .status(403)
         .send({ Error: "Unauthorized - Access forbidden for non-admin users" });
     }
+
+    next();
   } catch (error) {
     console.log(error);
   }
