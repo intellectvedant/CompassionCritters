@@ -4,6 +4,7 @@ import Adminmenu from '../../components/layout/Adminmenu'
 import { Box, styled } from "@mui/material";
 
 const MainBox = styled(Box)({
+  padding: "15px",
   display: "grid",
   gridTemplateColumns: "repeat(3,1fr)",
   gap: "5px",

@@ -18,6 +18,11 @@ const Adminmenu = () => {
         </ListItem>
         <ListItem>
           <ListItemText>
+            <Link to="/dashboard/admin/product">Products</Link>
+          </ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText>
             <Link to="/dashboard/admin/users">Users</Link>
           </ListItemText>
         </ListItem>

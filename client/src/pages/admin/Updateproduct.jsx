@@ -13,6 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import {useParams} from 'react-router-dom';
 
 const REACT_APP_API = "http://localhost:8000";
 
@@ -65,11 +66,14 @@ const initialProductState = {
   shipping: "",
 };
 
-const CreateProduct = () => {
+const Updateproduct = () => {
   const [categories, setCategories] = useState([]);
+  const [getproduct, setGetProduct] = useState([]);
+  const [categoryId, setCategoryId] = useState("")
   const user = useSelector((state) => state.auth);
   const [file, setFile] = useState("");
   const [product, setProduct] = useState(initialProductState);
+  const {slug} = useParams();
 
   // Auto-Complete Section
   const categoryOption = categories?.map((c) => ({
@@ -151,8 +155,31 @@ const CreateProduct = () => {
     }
   };
 
+  // read
+
+  const getProduct = async () => {
+    try {
+      const response = await axios.get(
+        `${REACT_APP_API}/product/get-product/${slug}`
+      );
+      if (response?.data) {
+        setGetProduct(response.data.product);
+        if(response.data.product.category_id && categoryOption.length > 0){
+            const selectedCategory = categoryOption.find((category)=> category.value === response.data.product.category_id)
+            setCategoryId((prevcategoryId)=>({
+                ...prevcategoryId, category : selectedCategory || null
+            }))
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in fetching Product Details");
+    }
+  };
+
   useEffect(() => {
     getAllCategory();
+    getProduct();
   }, []);
 
   return (
@@ -163,7 +190,7 @@ const CreateProduct = () => {
           <Adminmenu />
         </Box>
         <Box>
-          <h1> Create Product</h1>
+          <h1>Update Product</h1>
           <Box>
             <Autocomplete
               name="category"
@@ -171,10 +198,11 @@ const CreateProduct = () => {
               options={categoryOption}
               disablePortal
               sx={{ width: "300px" }}
+              value={categoryId.category}
               renderInput={(params) => (
                 <TextField {...params} label="Select Categories" />
               )}
-              onChange={(e, value) =>
+              onChange={(e, {value}) =>
                 handleAutocompleteChange("category", value)
               }
             />
@@ -208,21 +236,21 @@ const CreateProduct = () => {
           </Box>
           <CreateBox>
             <TextField
-              value={product.name}
+              value={getproduct.product_name}
               name="name"
               placeholder="Enter Product Name"
               type="text"
               onChange={(e) => handleProductChange(e)}
             />
             <TextField
-              value={product.description}
+              value={getproduct.product_description}
               name="description"
               placeholder="Enter Product Description"
               type="text"
               onChange={(e) => handleProductChange(e)}
             />
             <TextField
-              value={product.price}
+              value={getproduct.product_price}
               name="price"
               placeholder="Enter Product Price (In Rupees)"
               type="number"
@@ -234,7 +262,7 @@ const CreateProduct = () => {
               }}
             />
             <TextField
-              value={product.quantity}
+              value={getproduct.product_quantity}
               name="quantity"
               placeholder="Enter Product Quantity"
               type="number"
@@ -247,7 +275,7 @@ const CreateProduct = () => {
             />
             <Autocomplete
               name="shipping"
-              value={product.shipping}
+              value={"shipping" ? true : false}
               options={shippingOption}
               disablePortal
               sx={{ width: "300px" }}
@@ -268,4 +296,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default Updateproduct;

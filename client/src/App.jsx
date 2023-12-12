@@ -14,10 +14,15 @@ import CreateProduct from "./pages/admin/CreateProduct";
 import Users from "./pages/admin/Users";
 import Profile from "./pages/user/Profile";
 import Orders from "./pages/user/Orders";
+import Products from "./pages/admin/Products";
+import Updateproduct from "./pages/admin/Updateproduct";
 
 // Components
 import ProtectedRoute from "./components/route/Protectedroute";
 import Adminroute from "./components/route/Adminroute";
+
+
+
 
 function App() {
   return (
@@ -39,6 +44,8 @@ function App() {
           <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
           <Route path="admin/users" element={<Users />} />
+          <Route path="admin/product" element={<Products />} />
+          <Route path="admin/update-product/:slug" element={<Updateproduct />} />
         </Route>
       </Routes>
     </>

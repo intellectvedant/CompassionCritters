@@ -46,7 +46,7 @@ export const updateCategory = async (req, res) => {
   console.log(req.body)
   try {
     const userData = {
-      category_name: req.body.category_name,
+      category_name: req.body.name,
     };
 
     console.log({userData})
