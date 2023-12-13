@@ -13,7 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 
 const REACT_APP_API = "http://localhost:8000";
 
@@ -68,12 +68,12 @@ const initialProductState = {
 
 const Updateproduct = () => {
   const [categories, setCategories] = useState([]);
-  const [getproduct, setGetProduct] = useState([]);
   const [categoryId, setCategoryId] = useState("")
   const user = useSelector((state) => state.auth);
   const [file, setFile] = useState("");
   const [product, setProduct] = useState(initialProductState);
   const {slug} = useParams();
+  const Naviagte = useNavigate();
 
   // Auto-Complete Section
   const categoryOption = categories?.map((c) => ({
@@ -95,28 +95,33 @@ const Updateproduct = () => {
   };
 
   const handleAutocompleteChange = (name, value) => {
-    const shippingValue = name === "shipping" ? value : value?.value || "";
+    const shippingValue = name === "product_shipping" ? value : value?.value || "";
     setProduct((prevProduct) => ({
       ...prevProduct,
       [name]: value?.value || "", // Set the selected value or an empty string if no value is selected
     }));
   };
 
-  // create
+  // update
 
-  const createProduct = async () => {
+  const updateProduct = async () => {
+    console.log(product)
     try {
       const formData = new FormData();
-      formData.append("name", product.name);
-      formData.append("description", product.description);
-      formData.append("price", product.price);
-      formData.append("quantity", product.quantity);
-      formData.append("category", product.category);
-      formData.append("shipping", product.shipping);
-      formData.append("photo", file);
+      formData.append("name", product.product_name);
+      formData.append("description", product.product_description);
+      formData.append("price", product.product_price);
+      formData.append("quantity", product.product_quantity);
+      formData.append("category", product.category_id);
+      formData.append("shipping", product.product_shipping);
+      if (file instanceof File) {
+        formData.append("photo", file);
+      }else{
+        formData.append("photo", product.product_photo);
+      }
 
-      const response = await axios.post(
-        `${REACT_APP_API}/product/create-product`,
+      const response = await axios.put(
+        `${REACT_APP_API}/product/update-product/${product.product_id}`,
         formData,
         {
           headers: {
@@ -138,6 +143,28 @@ const Updateproduct = () => {
       toast.error("Error in Creating Product Details");
     }
   };
+
+  // delete
+
+  const deleteProduct = async()=>{
+    try {
+
+      const response = await axios.delete(`${REACT_APP_API}/product/delete-product/${product.product_id}`,{
+        headers:{
+          Authorization: user?.token,
+        }
+   
+      })
+      if(response?.data){
+          toast.success("Deleted Product Successfully!")
+          Naviagte("/dashboard/admin/product")
+      }
+      
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in deleting Product Details")
+    }
+  }
 
   // read all
 
@@ -163,12 +190,13 @@ const Updateproduct = () => {
         `${REACT_APP_API}/product/get-product/${slug}`
       );
       if (response?.data) {
-        setGetProduct(response.data.product);
-        if(response.data.product.category_id && categoryOption.length > 0){
-            const selectedCategory = categoryOption.find((category)=> category.value === response.data.product.category_id)
-            setCategoryId((prevcategoryId)=>({
-                ...prevcategoryId, category : selectedCategory || null
-            }))
+        setProduct(response.data.product)
+        if (response.data.product.category_id) {
+            setCategoryId(response.data.product.category_id);
+          }
+
+        if(response.data.product.product_photo){
+            setFile(response.data.product.product_photo)
         }
       }
     } catch (error) {
@@ -193,18 +221,23 @@ const Updateproduct = () => {
           <h1>Update Product</h1>
           <Box>
             <Autocomplete
-              name="category"
+              name="category_id"
               getOptionLabel={(option) => option.label}
+              getOptionSelected={(option, value) => option.value === value.value}
               options={categoryOption}
               disablePortal
               sx={{ width: "300px" }}
-              value={categoryId.category}
+              value={
+                categoryOption.find((category) => category.value === categoryId) ||
+                null
+              }
               renderInput={(params) => (
                 <TextField {...params} label="Select Categories" />
               )}
-              onChange={(e, {value}) =>
-                handleAutocompleteChange("category", value)
-              }
+              onChange={(e, { value }) => {
+                console.log("Selected category:", value);
+                handleAutocompleteChange("category_id", value);
+              }}
             />
           </Box>
           <Box>
@@ -220,14 +253,14 @@ const Updateproduct = () => {
               type="file"
               onChange={(e) => {
                 const selectedFile = e.target.files[0];
-                setFile(selectedFile);
+                setFile(selectedFile ? selectedFile : product?.product_photo );
               }}
             />
 
             {file && (
               <Box>
                 <img
-                  src={URL.createObjectURL(file)}
+                  src={file instanceof File ? URL.createObjectURL(file) : file}
                   alt="product_photo"
                   style={{ height: "300px", width: "300px" }}
                 />
@@ -236,22 +269,22 @@ const Updateproduct = () => {
           </Box>
           <CreateBox>
             <TextField
-              value={getproduct.product_name}
-              name="name"
+              value={product.product_name}
+              name="product_name"
               placeholder="Enter Product Name"
               type="text"
               onChange={(e) => handleProductChange(e)}
             />
             <TextField
-              value={getproduct.product_description}
-              name="description"
+              value={product.product_description}
+              name="product_description"
               placeholder="Enter Product Description"
               type="text"
               onChange={(e) => handleProductChange(e)}
             />
             <TextField
-              value={getproduct.product_price}
-              name="price"
+              value={product.product_price}
+              name="product_price"
               placeholder="Enter Product Price (In Rupees)"
               type="number"
               onChange={(e) => handleProductChange(e)}
@@ -262,8 +295,8 @@ const Updateproduct = () => {
               }}
             />
             <TextField
-              value={getproduct.product_quantity}
-              name="quantity"
+              value={product.product_quantity}
+              name="product_quantity"
               placeholder="Enter Product Quantity"
               type="number"
               onChange={(e) => handleProductChange(e)}
@@ -274,7 +307,7 @@ const Updateproduct = () => {
               }}
             />
             <Autocomplete
-              name="shipping"
+              name="product_shipping"
               value={"shipping" ? true : false}
               options={shippingOption}
               disablePortal
@@ -283,11 +316,14 @@ const Updateproduct = () => {
                 <TextField {...params} label="Shipping Status" />
               )}
               onChange={(e, value) =>
-                handleAutocompleteChange("shipping", value)
+                handleAutocompleteChange("product_shipping", value)
               }
             />
-            <Button variant="contained" onClick={() => createProduct()}>
-              Create Product
+            <Button variant="contained" onClick={() => updateProduct()}>
+              Update Product
+            </Button>
+            <Button variant="contained" color="error" onClick={() => deleteProduct()}>
+               Delete Product
             </Button>
           </CreateBox>
         </Box>

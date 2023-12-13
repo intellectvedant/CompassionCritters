@@ -74,6 +74,9 @@ export const updateProduct = async (req, res) => {
       product_photo: req.files.photo,
     };
 
+    console.log({photo1 : userData.product_photo})
+    console.log({photo2 : req.files.photo})
+
     const { product_id } = req.params;
 
     const slug = slugify(userData.product_name, { lower: true });
@@ -83,15 +86,27 @@ export const updateProduct = async (req, res) => {
 
     // uploading image to cloudinary
 
-    const uploadPhoto = await cloudinary.uploader.upload(
-      userData.product_photo.path,
-      {
-        public_id: `products/${uniqueIdentifier}`,
-        folder: "products",
-      }
-    );
+    let photoUrl;
 
-    const photoUrl = uploadPhoto.secure_url;
+    if(userData.product_photo !== undefined){
+      const uploadPhoto = await cloudinary.uploader.upload(
+        userData.product_photo.path,
+        {
+          public_id: `products/${uniqueIdentifier}`,
+          folder: "products",
+        }
+      );
+  
+      photoUrl = uploadPhoto.secure_url;
+    }else{
+      console.log({photo3: req.fields.photo})
+      photoUrl = req.fields.photo
+    }
+
+
+
+
+
 
     const product = await client.query(
       "UPDATE product SET product_name = $1, product_slug = $2, product_description = $3, product_price = $4, category_id = $5, product_quantity = $6, product_shipping = $7, product_photo = $8 WHERE product_id = $9 RETURNING *",
@@ -159,7 +174,7 @@ export const deleteProduct = async (req, res) => {
   try {
     const { product_id } = req.params;
     const product = await client.query(
-      "DELETE * FROM product where product_id=$1",
+      "DELETE FROM product where product_id=$1",
       [product_id]
     );
 
