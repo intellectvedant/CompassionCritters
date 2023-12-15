@@ -121,3 +121,22 @@ export const userLogin = async (req, res) => {
 export const test = async (req, res) => {
   return res.status(200).send({ msg: "Yo fam good!" });
 };
+
+
+
+// ordeer
+
+export const userOrders = async (req, res) => {
+  try {
+    const order = await client.query(
+      "SELECT o.order_id, p.product_name, p.product_id, u.user_name FROM orders o JOIN product p ON p.product_id = ANY(o.ordered_products) JOIN users u ON o.buyer = u.user_id WHERE o.buyer = $1",
+      [req.user.userId]
+    );
+
+    console.log({order: order})
+    res.status(201).json({ msg: "Orders Fetched Successfully", order: order.rows });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};

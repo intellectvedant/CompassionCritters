@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import Layout from "../components/layout/Layout";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import Slider from "react-slick";
@@ -17,6 +17,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link } from "react-router-dom";
+import { addToCart } from "../features/cart/cartSlice";
 
 const REACT_APP_API = "http://localhost:8000";
 
@@ -43,7 +44,11 @@ const Arrow = styled("div")`
 
 const Homepage = () => {
   const user = useSelector((state) => state.auth);
+  const cart = useSelector((state) => state.cart);
   const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  
+  console.log({cart:cart});
 
   const getAllProduct = async () => {
     try {
@@ -113,9 +118,15 @@ const Homepage = () => {
                     {product.category_name}
                   </Typography>
                   <Box sx={{ display: "flex", gap: "10px" }}>
-                    <Button>See {product.product_name}'s Story!</Button>
-                    <Button>
-                      <FavoriteIcon />
+                    <Link to={`/product/${product.product_slug}`}>
+                      <Button>See {product.product_name}'s Story!</Button>
+                    </Link>
+
+                    <Button onClick={(e)=> {
+                      dispatch(addToCart({...cart,product}))
+                      toast.success("Loved Successfully")
+                    }}>
+                      Loved
                     </Button>
                   </Box>
                 </CardContent>

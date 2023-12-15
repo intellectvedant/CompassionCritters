@@ -17,13 +17,14 @@ import Profile from "./pages/user/Profile";
 import Orders from "./pages/user/Orders";
 import Products from "./pages/admin/Products";
 import Updateproduct from "./pages/admin/Updateproduct";
+import Search from "./pages/Search";
+import Productdetails from "./pages/Productdetails";
+import Categorydetails from "./pages/Categorydetails";
+import Cartpage from "./pages/Cartpage";
 
 // Components
 import ProtectedRoute from "./components/route/Protectedroute";
 import Adminroute from "./components/route/Adminroute";
-
-
-
 
 
 function App() {
@@ -32,7 +33,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/product/:slug" element={<Productdetails />} />
+        <Route path="/category/:slug" element={<Categorydetails />} />
         <Route path="/about" element={<About />} />
+        <Route path="/cart" element={<Cartpage/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="*" element={<Pagenotfound />} />
@@ -48,7 +53,10 @@ function App() {
           <Route path="admin/create-product" element={<CreateProduct />} />
           <Route path="admin/users" element={<Users />} />
           <Route path="admin/product" element={<Products />} />
-          <Route path="admin/update-product/:slug" element={<Updateproduct />} />
+          <Route
+            path="admin/update-product/:slug"
+            element={<Updateproduct />}
+          />
         </Route>
       </Routes>
     </>

@@ -11,8 +11,6 @@ import {
   Checkbox,
   RadioGroup,
   Radio,
-  FormControl,
-  FormLabel,
 } from "@mui/material";
 import Layout from "../components/layout/Layout";
 import { useSelector } from "react-redux";
@@ -24,6 +22,7 @@ import "slick-carousel/slick/slick-theme.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Grid } from "@mui/material";
 import { Prices } from "../components/Prices";
+import { Link } from "react-router-dom";
 
 const REACT_APP_API = "http://localhost:8000";
 
@@ -40,6 +39,9 @@ const Explore = () => {
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   //   filter by category
 
@@ -51,6 +53,23 @@ const Explore = () => {
       all = all.filter((c) => c !== id);
     }
     setChecked(all);
+  };
+
+  // filter
+
+  const filterProduct = async () => {
+    try {
+      const response = await axios.post(
+        `${REACT_APP_API}/product/filter-product`,
+        { checked, radio }
+      );
+      if (response?.data) {
+        setProducts(response.data.product);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in fetching Filtered Product Details");
+    }
   };
 
   //   read all product
@@ -85,10 +104,30 @@ const Explore = () => {
     }
   };
 
+  // total
+
+  const getTotal = async () => {
+    try {
+      const response = await axios.get(
+        `${REACT_APP_API}/product/count-product`
+      );
+      if (response?.data) {
+        setTotal(response.data.product);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAllProduct();
     getAllCategory();
+    getTotal();
+    if (!checked.lentgh || !radio.length) getAllProduct();
   }, []);
+
+  useEffect(() => {
+    if (checked.lentgh || radio.length) filterProduct();
+  }, [checked, radio]);
 
   console.log(user);
   return (
@@ -140,6 +179,13 @@ const Explore = () => {
                   />
                 ))}
               </RadioGroup>
+              <h5>Reset Filters:</h5>
+              <Button
+                variant="contained"
+                onClick={() => window.location.reload()}
+              >
+                Reset Filters
+              </Button>
             </Box>
           </Grid>
           <Grid
@@ -175,7 +221,9 @@ const Explore = () => {
                       {product.category_name}
                     </Typography>
                     <Box sx={{ display: "flex", gap: "10px" }}>
-                      <Button>See {product.product_name}'s Story!</Button>
+                      <Link to={`/product/${product.product_slug}`}>
+                        <Button>See {product.product_name}'s Story!</Button>
+                      </Link>
                       <Button>
                         <FavoriteIcon />
                       </Button>
@@ -187,6 +235,9 @@ const Explore = () => {
             ))}
           </Grid>
         </Grid>
+        <Box>
+          <h3>{total}</h3>
+        </Box>
       </Box>
     </Layout>
   );

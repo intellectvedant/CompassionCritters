@@ -49,12 +49,12 @@ export const updateCategory = async (req, res) => {
       category_name: req.body.name,
     };
 
-    console.log({userData})
+
 
 
     const { id } = req.params;
 
-    console.log(req.params)
+
 
     const slug = slugify(userData.category_name, { lower: true });
 
@@ -62,8 +62,6 @@ export const updateCategory = async (req, res) => {
       "UPDATE category SET category_name = $1, slug=$2 WHERE category_id = $3 RETURNING *",
       [userData.category_name, slug, id]
     );
-
-    console.log(category)
 
     res.status(201).json({msg: "Category updated Succesfully", category : category.rows[0]})
 
@@ -81,8 +79,6 @@ export const getAllCategory = async (req, res) => {
     const category = await client.query(
       "SELECT * FROM category"
     )
-
-    console.log(category)
     res.status(201).json({msg: "Catgories fetched SUccessfully", category: category.rows})
 
   } catch (error) {

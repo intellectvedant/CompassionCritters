@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Box,
@@ -13,6 +13,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import { toast } from "react-hot-toast";
+import SearchInputs from "../form/Searchinputs";
+import useCategory from "../../hooks/useCategory";
 
 const MainBox = styled(Toolbar)`
   display: flex;
@@ -45,19 +47,29 @@ const RightBox = styled(Box)`
 `;
 
 const Header = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
+  const [userAnchorEl, setUserAnchorEl] = useState(null);
+  const categoryMenuOpen = Boolean(categoryAnchorEl);
+  const userMenuOpen = Boolean(userAnchorEl);
   const user = useSelector((state) => state.auth);
+  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+  const categories = useCategory();
 
+  console.log({cart:cart});
 
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleCategoryClick = (event) => {
+    setCategoryAnchorEl(event.currentTarget);
   };
+
+  const handleUserClick = (event) => {
+    setUserAnchorEl(event.currentTarget);
+  };
+
   const handleClose = () => {
-    setAnchorEl(null);
+    setCategoryAnchorEl(null);
+    setUserAnchorEl(null);
   };
 
   const handleLogout = (e) => {
@@ -75,15 +87,52 @@ const Header = () => {
             <Typography variant="h5">CompassionCritters</Typography>
           </Link>
         </LeftBox>
+        <Box
+          sx={{ bgcolor: "white", p: "5px", m: "3px", borderRadius: "12px" }}
+        >
+          <SearchInputs />
+        </Box>
+
         <RightBox>
           <Link to="/">
             <Typography>Home</Typography>
           </Link>
-          <Link to="/category">
-            <Typography>Category</Typography>
-          </Link>
+
+          <div>
+            <Button
+              id="category-button"
+              aria-controls={categoryMenuOpen ? "category-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={categoryMenuOpen ? "true" : undefined}
+              onClick={handleCategoryClick}
+            >
+              Category
+            </Button>
+            <Menu
+              id="category-menu"
+              anchorEl={categoryAnchorEl}
+              open={categoryMenuOpen}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "category-button",
+              }}
+            >
+              {categories?.map((category) => (
+                <Link
+                  key={category.category_id}
+                  to={`/category/${category?.slug}`}
+                >
+                  <MenuItem onClick={handleClose}>
+                    {" "}
+                    {category.category_name}
+                  </MenuItem>
+                </Link>
+              ))}
+            </Menu>
+          </div>
+
           <Link to="/cart">
-            <Typography>Cart (0)</Typography>
+            <Typography>Cart {cart.cart?.length}</Typography>
           </Link>
           {!user.isAuthenticated ? (
             <>
@@ -95,24 +144,32 @@ const Header = () => {
             <>
               <div>
                 <Button
-                  id="basic-button"
-                  aria-controls={open ? "basic-menu" : undefined}
+                  id="user-button"
+                  aria-controls={userMenuOpen ? "user-menu" : undefined}
                   aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
+                  aria-expanded={userMenuOpen ? "true" : undefined}
+                  onClick={handleUserClick}
                 >
                   {user.user.name}
                 </Button>
                 <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
+                  id="user-menu"
+                  anchorEl={userAnchorEl}
+                  open={userMenuOpen}
                   onClose={handleClose}
                   MenuListProps={{
-                    "aria-labelledby": "basic-button",
+                    "aria-labelledby": "user-button",
                   }}
                 >
-                  <MenuItem onClick={handleClose}><Link to={`/dashboard/${user?.user?.is_admin === false ? "user" : "admin"}`}>Dashboard</Link></MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Link
+                      to={`/dashboard/${
+                        user?.user?.is_admin === false ? "user" : "admin"
+                      }`}
+                    >
+                      Dashboard
+                    </Link>
+                  </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Button onClick={(e) => handleLogout(e)}>Logout</Button>
                   </MenuItem>

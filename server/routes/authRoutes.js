@@ -1,5 +1,5 @@
 import express from 'express';
-import { userRegister, userLogin, test, } from '../controllers/authController.js';
+import { userRegister, userLogin, test, userOrders, } from '../controllers/authController.js';
 import { isAdmin, tokenVerification } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -20,5 +20,10 @@ router.get('/user-auth', tokenVerification, (req,res)=>{
 router.get('/admin-auth', tokenVerification,isAdmin,(req,res)=>{
     res.status(200).json({ok: true})
 })
+
+
+// order
+
+router.get('/orders', tokenVerification, userOrders)
 
 export default router;
