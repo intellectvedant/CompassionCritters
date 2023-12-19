@@ -47,8 +47,8 @@ const Homepage = () => {
   const cart = useSelector((state) => state.cart);
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
-  
-  console.log({cart:cart});
+
+  console.log({ cart: cart });
 
   const getAllProduct = async () => {
     try {
@@ -122,6 +122,110 @@ const Homepage = () => {
                       <Button>See {product.product_name}'s Story!</Button>
                     </Link>
 
+                    <Button
+                      onClick={(e) => {
+                        dispatch(addToCart({ ...cart, product }));
+                        toast.success("Loved Successfully");
+                      }}
+                    >
+                      Loved
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
+              // </Link>
+            ))}
+          </Slider>
+        </Box>
+        <Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <h1> Lets Listen their stories!</h1>
+            <Link to="/explore">
+              <Button variant="contained" sx={{ height: "40px" }}>
+                Explore Every Story!...
+              </Button>
+            </Link>
+          </Box>
+          <Slider {...settings}>
+            {products.map((product) => (
+              // <Link to={`/dashboard/admin/update-product/${product.product_slug}`}>
+              <Card key={product.product_id} sx={{ borderRadius: "12px" }}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={product.product_photo}
+                  alt={`${product.product_name} - ${product.category_name}`}
+                />
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {product.product_name}
+                  </Typography>
+                  <Typography color="textSecondary" gutterBottom>
+                    {product.category_name}
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: "10px" }}>
+                    <Link to={`/product/${product.product_slug}`}>
+                      <Button>See {product.product_name}'s Story!</Button>
+                    </Link>
+
+                    <Button
+                      onClick={(e) => {
+                        dispatch(addToCart({ ...cart, product }));
+                        toast.success("Loved Successfully");
+                      }}
+                    >
+                      Loved
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
+              // </Link>
+            ))}
+          </Slider>
+        </Box>
+        <Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <h1> Lets Listen their stories!</h1>
+            <Link to="/explore">
+              <Button variant="contained" sx={{ height: "40px" }}>
+                Explore Every Story!...
+              </Button>
+            </Link>
+          </Box>
+          <Slider {...settings}>
+            {products.map((product) => (
+              // <Link to={`/dashboard/admin/update-product/${product.product_slug}`}>
+              <Card key={product.product_id} sx={{ borderRadius: "12px" }}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={product.product_photo}
+                  alt={`${product.product_name} - ${product.category_name}`}
+                />
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {product.product_name}
+                  </Typography>
+                  <Typography color="textSecondary" gutterBottom>
+                    {product.category_name}
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: "10px" }}>
+                    <Link to={`/product/${product.product_slug}`}>
+                      <Button>See {product.product_name}'s Story!</Button>
+                    </Link>
+
                     <Button onClick={(e)=> {
                       dispatch(addToCart({...cart,product}))
                       toast.success("Loved Successfully")
@@ -135,6 +239,7 @@ const Homepage = () => {
             ))}
           </Slider>
         </Box>
+
       </Box>
     </Layout>
   );

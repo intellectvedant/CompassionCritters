@@ -6,7 +6,7 @@ import Usermenu from '../../components/layout/Usermenu';
 
 const MainBox = styled(Box)({
   display: "grid",
-  gridTemplateColumns: "repeat(3,1fr)",
+  gridTemplateColumns: "(3fr,1fr)",
   gap: "5px",
   "& > div": {
     padding: "3px",

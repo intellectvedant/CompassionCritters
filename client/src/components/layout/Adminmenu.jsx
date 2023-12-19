@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Adminmenu = () => {
   return (
     <>
-      <List>
+      <List sx={{display: "flex", gap: "20px"}}>
         <ListItem>
           <ListItemText>
             <Link to="/dashboard/admin/create-category">Create Category</Link>
@@ -19,6 +19,11 @@ const Adminmenu = () => {
         <ListItem>
           <ListItemText>
             <Link to="/dashboard/admin/product">Products</Link>
+          </ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText>
+            <Link to="/dashboard/admin/orders">Orders</Link>
           </ListItemText>
         </ListItem>
         <ListItem>

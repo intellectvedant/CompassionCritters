@@ -94,10 +94,13 @@ const Cartpage = () => {
           },
         }
       );
-      setLoading(false);
-      dispatch(clearCart());
-      Navigate("/dashboard/user/orders");
-      toast.success("Ordered Successfully");
+      if (response.data) {
+        setLoading(false);
+        dispatch(clearCart());
+        const order_id = await response.data.order[0].order_id
+        Navigate(`/order-payment-status/${order_id}`);
+        toast.success("Ordered Successfully");
+      }
     } catch (error) {
       console.error(error);
       setLoading(false);

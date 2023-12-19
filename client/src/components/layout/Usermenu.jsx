@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Usermenu = () => {
   return (
     <>
-      <List>
+      <List sx={{display: "flex", gap: "20px"}}>
         <ListItem>
           <ListItemText>
             <Link to="/dashboard/user/profile">Profile</Link>

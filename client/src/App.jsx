@@ -21,11 +21,14 @@ import Search from "./pages/Search";
 import Productdetails from "./pages/Productdetails";
 import Categorydetails from "./pages/Categorydetails";
 import Cartpage from "./pages/Cartpage";
+import Adminorder from "./pages/admin/Adminorder";
+import OrderSuccessfull from "./pages/OrderSuccessfull";
+
+
 
 // Components
 import ProtectedRoute from "./components/route/Protectedroute";
 import Adminroute from "./components/route/Adminroute";
-
 
 function App() {
   return (
@@ -37,20 +40,27 @@ function App() {
         <Route path="/product/:slug" element={<Productdetails />} />
         <Route path="/category/:slug" element={<Categorydetails />} />
         <Route path="/about" element={<About />} />
-        <Route path="/cart" element={<Cartpage/>} />
+        <Route path="/cart" element={<Cartpage />} />
+        <Route path="/order-payment-status/:order_id" element={<OrderSuccessfull/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="*" element={<Pagenotfound />} />
         <Route path="/login" element={<Auth />} />
+
+        {/* Dashboard User */}
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/profile" element={<Profile />} />
           <Route path="user/orders" element={<Orders />} />
         </Route>
+
+        {/* Dashboard Admin */}
+
         <Route path="/dashboard" element={<Adminroute />}>
           <Route path="admin" element={<Admindashboard />} />
           <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
+          <Route path="admin/orders" element={<Adminorder />} />
           <Route path="admin/users" element={<Users />} />
           <Route path="admin/product" element={<Products />} />
           <Route

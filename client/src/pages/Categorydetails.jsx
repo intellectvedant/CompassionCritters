@@ -20,7 +20,6 @@ const REACT_APP_API = "http://localhost:8000";
 const Categorydetails = () => {
   const { slug } = useParams();
   const [products, setProducts] = useState([]);
-  console.log({ Slug: slug });
 
   // read products by categories
 

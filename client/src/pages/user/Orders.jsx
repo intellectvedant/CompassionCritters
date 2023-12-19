@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/layout/Layout";
-import { Box, styled } from "@mui/material";
+import {
+  Box,
+  List,
+  styled,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  Typography,
+} from "@mui/material";
 import Usermenu from "../../components/layout/Usermenu";
-import { useSelector, useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 const REACT_APP_API = "http://localhost:8000";
 
 const MainBox = styled(Box)({
+  padding: "20px",
   display: "grid",
-  gridTemplateColumns: "repeat(3,1fr)",
+  gridTemplateColumns: "(3fr,1fr)",
   gap: "5px",
   "& > div": {
     padding: "3px",
@@ -21,7 +30,7 @@ const MainBox = styled(Box)({
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const auth = useSelector((state) => state.auth);
-
+  const [loading, setLoading] = useState(true);
 
   const getOrders = async () => {
     try {
@@ -30,15 +39,19 @@ const Orders = () => {
           Authorization: auth?.token,
         },
       });
-      setOrders(response.data.order)
+      setOrders(response.data.order);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if(auth?.token) getOrders();
-  }, []);
+    if (auth?.token) {
+      getOrders(); // Fetch orders initially
+    }
+  }, [auth?.token]);
 
   return (
     <Layout>
@@ -48,8 +61,30 @@ const Orders = () => {
           <Usermenu />
         </Box>
         <Box>
-          <h1>Orders</h1>
-          <h3>{JSON.stringify(orders,null,4)}</h3>
+          <List>
+            {orders.map((orderItem) => (
+              <ListItem key={orderItem?.product_id} alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt={orderItem?.product_name}
+                    src={orderItem?.product_photo}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={orderItem?.product_name}
+                  secondary={
+                    <Typography variant="body2" color="textSecondary">
+                      {`Order Id: ${orderItem?.order_id} | Product Id : ${
+                        orderItem?.product_id
+                      } | Payment Status: ${
+                        orderItem.payment.success ? "Success" : "Error"
+                      } | Order Status: ${orderItem.status}`}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
         </Box>
       </MainBox>
     </Layout>

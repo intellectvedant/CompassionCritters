@@ -361,14 +361,13 @@ export const categoryProduct = async (req, res) => {
 
 export const orderToken = async (req, res) => {
   try {
-    gateway.clientToken.generate({}, function (err,response){
-      if(err){
-        res.status(500).send(err)
-      }else{
-        res.send(response)
+    gateway.clientToken.generate({}, function (err, response) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(response);
       }
-    })
-
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Internal Server Error" });
@@ -380,11 +379,6 @@ export const orderToken = async (req, res) => {
 export const orderPayment = async (req, res) => {
   try {
     const { cart, nonce } = req.body;
-
-    console.log({ cart: cart });
-    console.log({ nonce: nonce });
-    console.log({ user: req.user });
-
 
     let total = 0;
     cart.cart.map((i) => (total += i.product_price));
@@ -400,16 +394,17 @@ export const orderPayment = async (req, res) => {
       async function (err, result) {
         try {
           if (result) {
-
-
             const orderQuery = {
-              text:
-                "INSERT INTO orders (ordered_products, payment, buyer) VALUES ($1, $2, $3)",
-              values: [cart?.cart.map(item => item.product_id), result , req.user?.userId],
+              text: "INSERT INTO orders (ordered_products, payment, buyer) VALUES ($1, $2, $3) RETURNING *",
+              values: [
+                cart?.cart.map((item) => item.product_id),
+                result,
+                req.user?.userId,
+              ],
             };
 
-            await client.query(orderQuery);
-            res.json({ ok: true });
+            const order = await client.query(orderQuery);
+            res.json({ ok: true, order: order.rows });
           } else {
             res.status(500).send(err);
           }
@@ -424,4 +419,3 @@ export const orderPayment = async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
-

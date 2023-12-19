@@ -19,7 +19,7 @@ const REACT_APP_API = "http://localhost:8000";
 const MainBox = styled(Box)({
   padding: "15px",
   display: "grid",
-  gridTemplateColumns: "repeat(3,1fr)",
+  gridTemplateColumns: "(3fr, 1fr)",
   gap: "5px",
   "& > div": {
     padding: "3px",
