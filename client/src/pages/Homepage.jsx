@@ -18,6 +18,7 @@ import "slick-carousel/slick/slick-theme.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link } from "react-router-dom";
 import { addToCart } from "../features/cart/cartSlice";
+import Banner from "./Banner";
 
 const REACT_APP_API = "http://localhost:8000";
 
@@ -83,7 +84,8 @@ const Homepage = () => {
     <Layout>
       <Box sx={{ p: "10px" }}>
         <Box>
-          <h1> Welcome, {user.user ? user.user.name : "Paw-sitivePal"}</h1>
+          {/* <h3> Welcome, {user.user ? user.user.name : "Paw-sitivePal"}</h3> */}
+          <Banner/>
         </Box>
         <Box>
           <Box

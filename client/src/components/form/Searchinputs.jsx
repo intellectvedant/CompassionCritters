@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setSearch } from "../../features/product/searchSlice";
+import SearchIcon from "@mui/icons-material/Search";
 
 const REACT_APP_API = "http://localhost:8000";
 
@@ -11,8 +12,8 @@ const SearchInputs = () => {
   const Naviagte = useNavigate();
   const dispatch = useDispatch();
   const search = useSelector((state) => state.search);
-  console.log({keyword: search})
-  console.log({keyword1: search.keyword})
+  console.log({ keyword: search });
+  console.log({ keyword1: search.keyword });
 
   const handleChange = (e) => {
     dispatch(setSearch({ keyword: e.target.value, results: [] }));
@@ -24,7 +25,9 @@ const SearchInputs = () => {
         `${REACT_APP_API}/product/search-product/${search.keyword}`
       );
       if (response.data) {
-        dispatch(setSearch({ keyword: search.keyword, results: response.data }));
+        dispatch(
+          setSearch({ keyword: search.keyword, results: response.data })
+        );
         Naviagte("/search");
       }
     } catch (error) {
@@ -33,15 +36,16 @@ const SearchInputs = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", gap: "5px"}}>
+    <Box sx={{ display: "flex", gap: "5px", maxHeight: "200px", justifyContent: "center", alignItems: "center" }}>
       <TextField
-        label="Search"
-        variant="outlined"
+        sx={{ bgcolor: "grey", borderRadius: "12px", "&:hover": { bgcolor: "white" }  }}
+        size="small"
         fullWidth
+        placeholder="Search"
         values={search.keyword}
         onChange={handleChange}
       />
-      <Button variant="contained" onClick={() => handleSearch()}>Search</Button>
+      <SearchIcon sx={{ bgcolor: "grey",borderRadius: "12px" , p: "5px", color: "black", cursor: "pointer", "&:hover": { color: "white" } }} onClick={() => handleSearch()} />
     </Box>
   );
 };

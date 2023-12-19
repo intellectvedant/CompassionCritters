@@ -88,7 +88,7 @@ const Header = () => {
           </Link>
         </LeftBox>
         <Box
-          sx={{ bgcolor: "white", p: "5px", m: "3px", borderRadius: "12px" }}
+          sx={{  p: "3px", m: "2px", borderRadius: "12px" }}
         >
           <SearchInputs />
         </Box>
