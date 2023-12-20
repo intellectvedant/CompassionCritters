@@ -45,7 +45,7 @@ const SearchInputs = () => {
         values={search.keyword}
         onChange={handleChange}
       />
-      <SearchIcon sx={{ bgcolor: "grey",borderRadius: "12px" , p: "5px", color: "black", cursor: "pointer", "&:hover": { color: "white" } }} onClick={() => handleSearch()} />
+      <SearchIcon sx={{ bgcolor: "grey",borderRadius: "12px" , p: "6px", color: "black", cursor: "pointer", "&:hover": { color: "white" } }} onClick={() => handleSearch()} />
     </Box>
   );
 };

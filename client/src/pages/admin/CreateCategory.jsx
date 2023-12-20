@@ -25,12 +25,16 @@ import Categoryform from "../../components/form/Categoryform";
 const REACT_APP_API = "http://localhost:8000";
 
 const MainBox = styled(Box)({
-  padding: "15px",
+  padding: "20px",
   display: "grid",
-  gridTemplateColumns: "(3fr, 1fr)",
+  gridTemplateColumns: "(3fr,1fr)",
   gap: "5px",
   "& > div": {
-    padding: "3px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
     border: "1px solid black",
   },
 });
@@ -114,7 +118,7 @@ const CreateCategory = () => {
           `${response.data.category.category_name} is updated Succesfully!`
         );
         handleClose();
-        selectedCategoryId(null);
+        setSelectedCategoryId(null);
         setUpdatedName("")
         getAllCategory();
       }
@@ -176,9 +180,9 @@ const CreateCategory = () => {
         <Box>
           <Adminmenu />
         </Box>
-        <Box>
-          <h1>Manage Category</h1>
-          <Typography>
+        <Box >
+          <h3>Manage Category</h3>
+          <Typography sx={{p: "10px 0px "}}>
             <Categoryform
               handleCategorySubmit={handleCategorySubmit}
               value={name}
